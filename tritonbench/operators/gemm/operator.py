@@ -430,7 +430,7 @@ class Operator(BenchmarkOperator):
                 "max_autotune_gemm_backends": "TRITON",
                 "autotune_fallback_to_aten": False,
                 "autotune_num_choices_displayed": self.inductor_autotune_num_choices_displayed,
-                "triton.enable_tlx_templates": True,
+                "triton.tlx_mode": "force",
                 "test_configs.autotune_choice_name_regex": "blackwell_gemm_ws",
             }
             with inductor_config.patch(inductor_config_patch):
