@@ -71,6 +71,18 @@ def get_parser(args=None):
         help="The rep time for each benchmark run.",
     )
     parser.add_argument(
+        "--autotune-warmup",
+        type=int,
+        default=None,
+        help="Warmup time in ms for Triton autotuning (sets TRITON_AUTOTUNE_WARMUP_MS). Default: Triton's default (25ms).",
+    )
+    parser.add_argument(
+        "--autotune-rep",
+        type=int,
+        default=None,
+        help="Rep time in ms for Triton autotuning (sets TRITON_AUTOTUNE_REP_MS). Default: Triton's default (100ms).",
+    )
+    parser.add_argument(
         "--sleep",
         type=float,
         default=0.0,
@@ -247,8 +259,35 @@ def get_parser(args=None):
     )
     parser.add_argument(
         "--gpu-lockdown",
+        nargs="?",
+        const=True,
+        default=False,
+        type=lambda x: int(x) if x.isdigit() else (x.lower() == "true"),
+        help="Lock down GPU frequency and clocks to avoid throttling. "
+        "Optionally specify target clock frequency in MHz (e.g., --gpu-lockdown 1000).",
+    )
+    parser.add_argument(
+        "--gpu-telemetry",
         action="store_true",
-        help="Lock down GPU frequency and clocks to avoid throttling.",
+        help="Enable GPU telemetry collection (clock, power, temperature, utilization).",
+    )
+    parser.add_argument(
+        "--gpu-telemetry-output",
+        type=str,
+        default=None,
+        help="Output directory for GPU telemetry CSV and charts. Required when --gpu-telemetry is enabled.",
+    )
+    parser.add_argument(
+        "--gpu-telemetry-interval-ms",
+        type=float,
+        default=10.0,
+        help="GPU telemetry sampling interval in milliseconds (default: 10).",
+    )
+    parser.add_argument(
+        "--gpu-lock-clock-mhz",
+        type=int,
+        default=None,
+        help="Target GPU clock frequency in MHz when using --gpu-lockdown (e.g., --gpu-lock-clock-mhz 1400). If not specified, uses max supported frequency.",
     )
     parser.add_argument(
         "--operator-loader",
